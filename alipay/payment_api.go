@@ -99,11 +99,6 @@ func (a *Client) TradeWapPayPost(ctx context.Context, bm gopay.BodyMap) (payUrl 
 	if err != nil {
 		return gopay.NULL, err
 	}
-	var bs []byte
-	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay"); err != nil {
-		return gopay.NULL, err
-	}
-
 	method := "alipay.trade.wap.pay"
 
 	var (
