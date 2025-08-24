@@ -5,6 +5,7 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
+	"github.com/go-pay/gopay/pkg/xhttp"
 
 	"github.com/go-pay/gopay"
 )
@@ -86,6 +87,69 @@ func (a *Client) TradeWapPay(ctx context.Context, bm gopay.BodyMap) (payUrl stri
 	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay"); err != nil {
 		return gopay.NULL, err
 	}
+	payUrl = string(bs)
+	return payUrl, nil
+}
+
+// alipay.trade.wap.pay(手机网站支付接口2.0)处理公共参数,使用post获取表单
+// 文档地址：https://opendocs.alipay.com/open/02ivbs
+func (a *Client) TradeWapPayPost(ctx context.Context, bm gopay.BodyMap) (payUrl string, err error) {
+	bm.Set("product_code", "QUICK_WAP_WAY")
+	err = bm.CheckEmptyError("out_trade_no", "total_amount", "subject")
+	if err != nil {
+		return gopay.NULL, err
+	}
+	var bs []byte
+	if bs, err = a.doAliPay(ctx, bm, "alipay.trade.wap.pay"); err != nil {
+		return gopay.NULL, err
+	}
+
+	method := "alipay.trade.wap.pay"
+
+	var (
+		bizContent, url string
+		bodyBs          []byte
+	)
+	if bm != nil {
+		_, has := appAuthTokenInBizContent[method]
+		if !has {
+			aat := bm.GetString(AppAuthToken)
+			bm.Remove(AppAuthToken)
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return gopay.NULL, fmt.Errorf("json.Marshal: %w", err)
+			}
+			bizContent = string(bodyBs)
+			if aat != "" {
+				bm.Set(AppAuthToken, aat)
+			}
+		} else {
+			if bodyBs, err = json.Marshal(bm); err != nil {
+				return gopay.NULL, fmt.Errorf("json.Marshal: %w", err)
+			}
+			bizContent = string(bodyBs)
+			bm.Remove(AppAuthToken)
+		}
+	}
+	// 处理公共参数,使用post获取表单
+	param, err := a.pubParamsHandle(bm, method, bizContent)
+	if err != nil {
+		return gopay.NULL, err
+	}
+	url = baseUrlUtf8
+	if !a.IsProd {
+		url = sandboxBaseUrlUtf8
+	}
+	res, bs, err := a.hc.Req(xhttp.TypeFormData).Post(url).SendString(param).EndBytes(ctx)
+	if err != nil {
+		return gopay.NULL, err
+	}
+	if a.DebugSwitch == gopay.DebugOn {
+		a.logger.Debugf("Alipay_Response: %d, %s", res.StatusCode, string(bs))
+	}
+	if res.StatusCode != 200 {
+		return gopay.NULL, fmt.Errorf("HTTP Request Error, StatusCode = %d", res.StatusCode)
+	}
+
 	payUrl = string(bs)
 	return payUrl, nil
 }
