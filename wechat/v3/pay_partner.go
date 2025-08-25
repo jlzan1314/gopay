@@ -7,8 +7,8 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-pay/gopay"
 	"github.com/go-pay/util/js"
+	"github.com/jlzan1314/gopay"
 )
 
 // （服务商、电商模式）APP下单API

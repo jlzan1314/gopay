@@ -7,7 +7,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/go-pay/gopay"
+	"github.com/jlzan1314/gopay"
 )
 
 // CreatePaymentToken creates a payment token.

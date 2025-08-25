@@ -3,7 +3,7 @@ package apple
 import (
 	"fmt"
 
-	"github.com/go-pay/gopay/pkg/jwt"
+	"github.com/jlzan1314/gopay/pkg/jwt"
 )
 
 const (

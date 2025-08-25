@@ -6,10 +6,10 @@ import (
 	"testing"
 	"time"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/alipay/cert"
 	"github.com/go-pay/util"
 	"github.com/go-pay/xlog"
+	"github.com/jlzan1314/gopay"
+	"github.com/jlzan1314/gopay/alipay/cert"
 )
 
 var (

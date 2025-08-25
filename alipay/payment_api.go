@@ -5,9 +5,9 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/go-pay/gopay/pkg/xhttp"
+	"github.com/jlzan1314/gopay/pkg/xhttp"
 
-	"github.com/go-pay/gopay"
+	"github.com/jlzan1314/gopay"
 )
 
 // alipay.trade.pay(统一收单交易支付接口)

@@ -3,9 +3,9 @@ package main
 import (
 	"context"
 
-	"github.com/go-pay/gopay"
-	"github.com/go-pay/gopay/alipay"
 	"github.com/go-pay/xlog"
+	"github.com/jlzan1314/gopay"
+	"github.com/jlzan1314/gopay/alipay"
 )
 
 func main() {
